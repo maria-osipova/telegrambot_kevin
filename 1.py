@@ -1,8 +1,10 @@
 import telebot
 from telebot import types
-#from aiogram.types import InlineKeyboardMarkup,InlineKeyboardButton
 
 bot = telebot.TeleBot('6774068511:AAFLW29l_cz1slADWNIp1u8C1WbYaFsRpwI')
+
+# Dictionary to store the user's messages
+user_responses = {}
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -15,10 +17,18 @@ def start(message):
 
 @bot.callback_query_handler(func=lambda callback: True)
 def callback_message(callback):
+    user_id = callback.from_user.id
+    chat_id = callback.message.chat.id
+
     if callback.data == 'yes':
-        bot.send_message(callback.message.chat.id, 'ок, спасибо, что предупредил')
+        user_responses[user_id] = 'окей! спасибо, что предупредил!'
     elif callback.data == 'no':
-        bot.send_message(callback.message.chat.id, 'ок, спасибо, что предупредил')
+        user_responses[user_id] = 'окей, спасибо, что предупредил.'
+
+    # Edit the original message to include the user's response
+    if user_id in user_responses:
+        bot.edit_message_text(user_responses[user_id], chat_id, callback.message.message_id)
+        bot.delete_message(chat_id, callback.message.message_id - 1)
 
 bot.polling(non_stop=True)
 
