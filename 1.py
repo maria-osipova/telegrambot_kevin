@@ -63,7 +63,7 @@ def function_to_run():
 
 if __name__ == "__main__":
     schedule.every().tuesday.at("08:00").do(function_to_run)
-    schedule.every().tuesday.at("08:00").do(function_to_run)
+    schedule.every().thursday.at("08:00").do(function_to_run)
     schedule.every().friday.at("08:00").do(function_to_run)
     Thread(target=schedule_checker).start()
     bot.polling(non_stop=True)
